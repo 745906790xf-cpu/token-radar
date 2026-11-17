@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>TOKEN RADAR</h1>
+    <p class="tag">Every protocol that records no token, ranked by what its token would be worth.</p>
+  </div>
+  <div class="meta" id="meta">Loading the snapshot…</div>
+</header>
+
+<nav class="filters" id="filters" aria-label="Filter the board"></nav>
+
+<main>
+  <section class="panel" id="board-panel">
+    <h2>The board <span class="hint">— select a row for its model and farm plan</span></h2>
+    <div class="table-wrap"><table id="board"></table></div>
+    <p class="count" id="count"></p>
+  </section>
+
+  <section class="panel" id="detail-panel">
+    <h2>Protocol detail</h2>
+    <div id="detail"><p class="dim">Select any row of the board to see its implied-value arithmetic and its farm plan.</p></div>
+  </section>
+
+  <section class="panel" id="method">
+    <h2>How the implied value is built</h2>
+    <p>The market already prices tokens per dollar of TVL: for every protocol whose token trades,
+    <code>mcap / TVL</code> is a realised multiple. Protocols in one category trade at similar
+    multiples, so each category is priced at the <strong>median mcap/TVL of its trading members</strong>
+    (three or more needed; thinner categories use the whole market's median, shown as “fallback”).
+    Multiples are clamped to 0.02–2.50 so one outlier cannot price a whole board.</p>
+    <p class="formula">implied = TVL × category multiple × growth × maturity × chains</p>
+    <ul>
+      <li><strong>Growth</strong> — 1 + (7-day TVL change, clamped to −50%…+100%) × 0.4.</li>
+      <li><strong>Maturity</strong> — 0.70 + (days since first listed, capped at 4 years) ÷ 4 years × 0.30. A protocol with no listing date is scored at 365 days.</li>
+      <li><strong>Chains</strong> — 1 + 0.02 per chain beyond the first, at most 1.08.</li>
+    </ul>
+    <p>No protocol name is ever special-cased: one function scores every row, and each detail view
+    prints the full arithmetic so a reader can check it. The board ranks pre-token protocols only;
+    protocols whose token already trades are listed separately at their market caps.</p>
+    <p class="honest"><strong>Honesty line.</strong> The snapshot records whether a protocol has a token
+    on file — a protocol is said to <em>record no token</em>, never that it <em>has none</em>. The
+    implied value is this entry's own claim, never make.fun's, and it predicts nothing about whether
+    or when a token is issued.</p>
+    <h3>Category multiples</h3>
+    <div class="table-wrap"><table id="multiples"></table></div>
+  </section>
+
+  <section class="panel" id="live-panel">
+    <h2>Already trading — the market's own prices</h2>
+    <p class="dim">These protocols record a token, so the board does not rank them. Their market caps are
+    the multiples the model is priced from.</p>
+    <div class="table-wrap"><table id="live"></table></div>
+  </section>
+</main>
+
+<footer>
+  <p id="source-line"></p>
+  <p class="dim">Token Radar · model radar-2 · static page, no network: every byte shown comes from the sealed snapshot.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
